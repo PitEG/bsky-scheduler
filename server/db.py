@@ -1,6 +1,9 @@
 import sqlite3
 from datetime import datetime
 
+SCHEDULED_POST_COMP = ['id','img_id','text','img_path','date']
+IMG_COMP = ['id','path','name','date']
+
 class Connection:
     def __init__(self, path):
         self.conn = sqlite3.connect(path)
@@ -15,7 +18,7 @@ class Connection:
                     name varchar, 
                     date datetime)''')
         except sqlite3.Error as e:
-            print(e)
+            pass # not good lmao
 
         # schedule
         try:
@@ -31,7 +34,7 @@ class Connection:
                             on delete cascade
                     )''')
         except sqlite3.Error as e:
-            print(e)
+            pass # not good lmao
 
     def add_img(self, path : str, name : str, date : datetime):
         data = (
@@ -51,6 +54,13 @@ class Connection:
         for row in self.conn.execute('select * from images'):
             imgs.append(row)
         return imgs
+
+    def get_img(self, img_id : str):
+        for row in self.conn.execute('''
+            select * from images
+            where id=:img_id
+            ''', ({'img_id': img_id})):
+            return {IMG_COMP[i]: row[i] for i in range(len(row))}
 
     def remove_img(self, img_id : int):
         # delete image from image table
@@ -78,9 +88,10 @@ class Connection:
     def remove_post(self, post_id):
         try:
             self.conn.execute('''
-                delete from scheduled_post
+                delete from scheduled_posts
                 where id=:post_id
                 ''',({'post_id': post_id}))
+            self.conn.commit()
         except sqlite3.Error as e:
             print(e)
         pass
@@ -93,7 +104,8 @@ class Connection:
             order by date
             limit 1
         '''):
-            return row
+            return {SCHEDULED_POST_COMP[i]: row[i] for i in range(len(row))}
+            # return row
 
     def get_scheduled_posts():
         posts = []
@@ -101,5 +113,5 @@ class Connection:
             select *
             from scheduled_posts
         '''):
-            posts.append(row)
+            posts.append({SCHEDULED_POST_COMP[i]: row[i] for i in range(len(row))})
         return posts
