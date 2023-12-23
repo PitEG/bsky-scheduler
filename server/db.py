@@ -14,8 +14,8 @@ class Connection:
             self.conn.execute('''
                 create table images(
                     id integer primary key autoincrement, 
-                    path varchar, 
                     name varchar, 
+                    path varchar, 
                     date datetime)''')
         except sqlite3.Error as e:
             pass # not good lmao
