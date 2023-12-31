@@ -88,7 +88,7 @@ func (conn Connection) GetAllImages() (images []Image) {
 
     for rows.Next() {
       var image Image
-      if err := rows.Scan(&image.id, &image.name, &image.path, &image.date) ; err != nil {
+      if err := rows.Scan(&image.Id, &image.Name, &image.Path, &image.Date) ; err != nil {
         log.Println(err)
         continue
       }
@@ -102,17 +102,17 @@ func (conn Connection) GetAllImages() (images []Image) {
 
 func (conn Connection) GetImage(id int) (image Image) {
   fn := func (db *sql.DB) {
-    image.id = id
-    image.name = ""
-    image.path = ""
-    image.date = time.Now()
+    image.Id = id
+    image.Name = ""
+    image.Path = ""
+    image.Date = time.Now()
 
     row := db.QueryRow(`
       select name,path,date from images where id=?
     `,
     id,
     )
-    row.Scan(&image.name,&image.path,&image.date)
+    row.Scan(&image.Name,&image.Path,&image.Date)
   }
 
   conn.Do(fn)
@@ -136,7 +136,7 @@ func (conn Connection) SchedulePost(image Image, text string, site string, date 
       insert into scheduled_posts(img_id,text,site,date)
       values(?,?,?,?)
     `,
-    image.id,
+    image.Id,
     text,
     site,
     date,
@@ -165,7 +165,7 @@ func (conn Connection) GetEarliestPost() (post ScheduledPost) {
       limit 1
     `)
 
-    row.Scan(&post.id,&post.imageId,&post.text,&post.site,&post.date)
+    row.Scan(&post.Id,&post.ImageId,&post.Text,&post.Site,&post.Date)
   }
 
   conn.Do(fn)
@@ -179,7 +179,7 @@ func (conn Connection) GetAllScheduledPosts() (posts []ScheduledPost) {
     `)
     for rows.Next() {
       var post ScheduledPost
-      if err := rows.Scan(&post.id,&post.imageId,&post.text,&post.site,&post.date) ; err != nil {
+      if err := rows.Scan(&post.Id,&post.ImageId,&post.Text,&post.Site,&post.Date) ; err != nil {
         log.Println(err)
         continue
       }

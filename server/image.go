@@ -6,13 +6,13 @@ import (
 )
 
 type Image struct {
-  id int
-  name string
-  path string
-  date time.Time
+  Id int
+  Name string
+  Path string
+  Date time.Time
 }
 
 func (i Image) String() string {
-  return fmt.Sprintf("id:%v,name:%v,path:%v,date:%v", i.id, i.name, i.path, i.date)
+  return fmt.Sprintf("id:%v,name:%v,path:%v,date:%v", i.Id, i.Name, i.Path, i.Date)
 }
 

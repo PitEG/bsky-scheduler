@@ -5,10 +5,10 @@ import (
 )
 
 type ScheduledPost struct {
-  id int
-  imageId int
-  text string
-  site string
-  date time.Time
+  Id int
+  ImageId int
+  Text string
+  Site string
+  Date time.Time
 }
 
