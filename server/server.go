@@ -43,6 +43,27 @@ func postImage(context *gin.Context) {
   context.IndentedJSON(http.StatusOK, thing)
 }
 
+// this function just posts something when it's time
+func socialMediaWorker(imgDir string, dbPath string) {
+  for {
+    fmt.Println("hi")
+
+    conn := Connection{filepath:"schedule.db"}
+
+    earliestPost := conn.GetEarliestPost()
+    fmt.Println(earliestPost)
+
+    // post if the scheduled time is before current time
+    fmt.Println(time.Now())
+    if time.Now().After(earliestPost.Date) {
+      // time to post it on social media
+    }
+
+    time.Sleep(5 * time.Second)
+    // time.Sleep(1 * time.Minute)
+  }
+}
+
 func main() {
   fmt.Println("hello world")
   conn := Connection{filepath:"schedule.db"}
@@ -53,11 +74,14 @@ func main() {
   images := conn.GetAllImages()
   fmt.Println(image) 
   fmt.Println(images)
+  // conn.SchedulePost(conn.GetImage(1), "filler text","bsky",time.Now())
 
   router := gin.Default()
   router.GET("/images",getAllImages)
   router.POST("/images",postImage)
   router.GET("/images/:id",getImage)
+
+  go socialMediaWorker(".","schedule.db")
 
   router.Run("localhost:8080")
 }
