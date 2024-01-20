@@ -85,11 +85,7 @@ func main() {
   fmt.Println(images)
   conn.SchedulePost(conn.GetImage(1), "filler text","bsky",time.Now())
   */
-  session, ok := createSession(*username,*password)
-  if ok != true {
-    println("couldn't create a session")
-  }
-  print(session)
+  post("","hi",*username,*password)
 
   router := gin.Default()
   router.GET("/images",getAllImages)
