@@ -6,6 +6,7 @@ import (
   "strconv"
   "net/http"
   "github.com/gin-gonic/gin"
+  "flag"
 )
 
 type test struct {
@@ -66,15 +67,29 @@ func socialMediaWorker(imgDir string, dbPath string) {
 
 func main() {
   fmt.Println("hello world")
+  // parse flags
+  username := flag.String("user","","bsky username")
+  password := flag.String("pass","","bsky api key")
+  flag.Parse()
+  println(*username)
+  println(*password)
+
   conn := Connection{filepath:"schedule.db"}
   conn.Init()
   _ = time.Now()
-  // conn.AddImage("name","path",time.Now())
+  /*
+  conn.AddImage("name","path",time.Now())
   image := conn.GetImage(1)
   images := conn.GetAllImages()
   fmt.Println(image) 
   fmt.Println(images)
-  // conn.SchedulePost(conn.GetImage(1), "filler text","bsky",time.Now())
+  conn.SchedulePost(conn.GetImage(1), "filler text","bsky",time.Now())
+  */
+  session, ok := createSession(*username,*password)
+  if ok != true {
+    println("couldn't create a session")
+  }
+  print(session)
 
   router := gin.Default()
   router.GET("/images",getAllImages)
